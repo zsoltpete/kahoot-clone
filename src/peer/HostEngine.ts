@@ -385,6 +385,14 @@ export class HostEngine {
     this.correctDisplayIndex = inv[correctOrig] ?? correctOrig
 
     this.lastDeltas = {}
+    const revealPayloads: {
+      playerId: string
+      displayIdx: number | null
+      correct: boolean
+      delta: number
+      yourScore: number
+    }[] = []
+
     this.conns.forEach((m) => {
       const ans = this.answers.get(m.playerId)
       const displayIdx = ans?.displayIndex ?? null
@@ -394,19 +402,24 @@ export class HostEngine {
       const elapsed = ans ? ans.at - this.questionStartedAt : q.timeLimit * 1000
       const delta = scoreAnswer(correct, elapsed, q.timeLimit)
       const prev = this.scores.get(m.playerId) ?? 0
-      this.scores.set(m.playerId, prev + delta)
+      const yourScore = prev + delta
+      this.scores.set(m.playerId, yourScore)
       this.lastDeltas[m.playerId] = { correct, delta }
+      revealPayloads.push({ playerId: m.playerId, displayIdx, correct, delta, yourScore })
+    })
 
-      const ranked = this.buildLeaderboard()
-      const rank = ranked.findIndex((e) => e.id === m.playerId) + 1
-
-      this.send(m.conn, {
+    const ranked = this.buildLeaderboard()
+    revealPayloads.forEach((r) => {
+      const meta = this.conns.get(r.playerId)
+      if (!meta) return
+      const rank = ranked.findIndex((e) => e.id === r.playerId) + 1
+      this.send(meta.conn, {
         type: 'reveal',
         correctIndex: this.correctDisplayIndex!,
-        yourAnswer: displayIdx,
-        correct,
-        delta,
-        yourScore: prev + delta,
+        yourAnswer: r.displayIdx,
+        correct: r.correct,
+        delta: r.delta,
+        yourScore: r.yourScore,
         yourRank: rank || this.conns.size,
       })
     })
