@@ -14,7 +14,7 @@ Live quiz web app powered by **PeerJS**: the **host browser is the realtime auth
 1. Nyisd meg az oldalt → **Házigazda**
 2. Válassz vagy szerkessz egy kvízt (cím, kérdések, 2–4 válasz, helyes válasz, időlimit)
 3. **Indítás** → megjelenik a **6 jegyű PIN**
-4. A játékosok a **Csatlakozás** oldalon írják be a PIN-t és a becenevüket
+4. A játékosok a **Csatlakozás** oldalon (`#/join`) írják be a PIN-t és a becenevüket
 5. Lobby: játékosok listája, csatlakozás lezárása, kirúgás
 6. **Játék indítása** → kérdés → lezárás → felfedés → ranglista → következő → dobogó
 7. **Újra játszás** a lobbyba visz vissza
@@ -31,9 +31,20 @@ Live quiz web app powered by **PeerJS**: the **host browser is the realtime auth
 ## Technológia / Tech
 - Vite + React + TypeScript
 - PeerJS (nyilvános broker) – P2P adatkapcsolat a házigazdához
-- GitHub Pages (statikus hosting) + GitHub Actions deploy
+- GitHub Pages (statikus hosting)
 - `base: '/kahoot-clone/'`
 - HashRouter (`#/join`, `#/host`) – megbízható Pages SPA útvonalak
+
+## Deploy / GitHub Pages
+
+Jelenleg a site a **`gh-pages`** ágról megy (legacy Pages source), mert a push tokennek nincs `workflow` scope-ja az Actions workflow fájl feltöltéséhez.
+
+```bash
+npm run deploy   # build + force-push dist → gh-pages
+```
+
+Actions workflow sablon: [`docs/github-pages-workflow.yml`](docs/github-pages-workflow.yml)  
+Másold ide: `.github/workflows/deploy.yml`, majd a repo **Settings → Pages → Source: GitHub Actions**.
 
 ## Korlátok / Limits
 - Nincs központi szerver: a házigazda gépének online kell maradnia

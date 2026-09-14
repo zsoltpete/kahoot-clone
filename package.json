@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "bash scripts/deploy-gh-pages.sh"
   },
   "dependencies": {
     "peerjs": "^1.5.5",
@@ -23,5 +24,6 @@
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
-  }
+  },
+  "description": "Kahoot-style live quiz (PeerJS host authority) for GitHub Pages"
 }

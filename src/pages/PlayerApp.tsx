@@ -66,12 +66,9 @@ export function PlayerApp() {
           setPlayers(msg.players)
           setJoiningLocked(msg.joiningLocked)
           setQuizTitle(msg.quizTitle)
-          setPhase((p) => (p === 'form' || p === 'connecting' ? 'lobby' : p === 'lobby' ? 'lobby' : p))
-          // Always update lobby data; force lobby phase only when waiting
-          setPhase((p) => {
-            if (p === 'form' || p === 'connecting' || p === 'lobby') return 'lobby'
-            return p
-          })
+          setPhase((p) =>
+            p === 'form' || p === 'connecting' || p === 'lobby' ? 'lobby' : p,
+          )
           break
         case 'error':
           setError(msg.message)
